@@ -12,7 +12,7 @@ Ryhmä
 - Essi
 
 Linkit
-- Product backlog: TODO
+- Product backlog: https://docs.google.com/spreadsheets/d/e/2PACX-1vSlPoHyTmr196f-UAnsxHPRqRhlnpJWYg5FNymdESZPKoTW9kiiol37jiW0-AugFU2qdXrfeuzbMuZk/pubhtml  (pelkkä lukuoikeus)
 - Sprint backlog ja burndown: TODO
 - GitHub Actions / CI: TODO
 - Hyväksymistestit: TODO
