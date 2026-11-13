@@ -9,6 +9,7 @@ Ryhmä
 - Elli
 - Samu
 - Tuomas
+- Essi
 
 Linkit
 - Product backlog: TODO
