@@ -13,7 +13,7 @@ Ryhmä
 
 Linkit
 - Product backlog: https://docs.google.com/spreadsheets/d/e/2PACX-1vSlPoHyTmr196f-UAnsxHPRqRhlnpJWYg5FNymdESZPKoTW9kiiol37jiW0-AugFU2qdXrfeuzbMuZk/pubhtml  (pelkkä lukuoikeus)
-- Sprint backlog ja burndown: TODO
+- Sprint backlog ja burndown: Samassa tiedostossa backlogin kanssa
 - GitHub Actions / CI: TODO
 - Hyväksymistestit: TODO
 
