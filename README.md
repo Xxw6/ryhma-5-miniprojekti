@@ -44,7 +44,27 @@ TODO: komennot testien, testikattavuuden ja Pylintin ajamiseen.
 
 ## Asennus ja käyttö
 
-*Täydennetään, kun sovelluksen ensimmäinen versio on valmis.*
+Tarvitset Python 3.10:n tai uudemman. Erillisiä kirjastoja ei tarvitse asentaa.
+
+Aja komento projektin kansiossa.
+
+PowerShell: python main.py
+
+Git Bash: winpty python main.py
+
+
+## Toiminnot
+
+- `1`: lisää teos 
+- `2`: listaa tallennetut teokset.
+- `0`: lopeta ohjelma.
+
+## Tietokanta
+
+ohjelma luo `references.db` tietokannan automaattisesti ensimmäisellä
+käynnistyksellä ja tiedot säilyvät myös ohjelman sulkemisen jälkeen.
+
+Huom! Tätä tietokantaa ei tarvitse tallentaa versionhallintaan.
 
 ## Lisenssi
 
