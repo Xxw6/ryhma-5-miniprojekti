@@ -44,13 +44,16 @@ TODO: komennot testien, testikattavuuden ja Pylintin ajamiseen.
 
 ## Asennus ja käyttö
 
-Tarvitset Python 3.10:n tai uudemman. Erillisiä kirjastoja ei tarvitse asentaa.
+Tarvitset [uv](https://docs.astral.sh/uv/)-työkalun. uv asentaa oikean Python-version (3.14) ja riippuvuudet automaattisesti.
 
-Aja komento projektin kansiossa.
+Asenna riippuvuudet projektin kansiossa:
 
-PowerShell: python main.py
+    uv sync
 
-Git Bash: winpty python main.py
+Käynnistä ohjelma:
+
+- PowerShell: `uv run python main.py`
+- Git Bash: `winpty uv run python main.py`
 
 
 ## Toiminnot
