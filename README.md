@@ -6,7 +6,7 @@ Ryhmä: Teemu, Elli, Samu, Tuomas, Essi
 
 # Lähdeviitehallinta
 
-<!-- Lisää CI- ja Codecov-badget tähän, kun GitHub Actions on pystyssä -->
+[![CI](https://github.com/Xxw6/ryhma-5-miniprojekti/actions/workflows/main.yml/badge.svg)](https://github.com/Xxw6/ryhma-5-miniprojekti/actions)
 
 Sovellus LaTeX-lähdeviitteiden hallintaan. Sen avulla kandidaatintutkielman kirjoittaja voi tallentaa käyttämänsä lähteet yhteen paikkaan ja tuottaa niistä BibTeX-tiedoston, jonka voi liittää suoraan LaTeX-dokumenttiin tai Overleafiin.
 
@@ -29,8 +29,7 @@ Linkit
 - [Product backlog ja sprint backlogit](LINKKI_BACKLOGIIN)
 - Product backlog: https://docs.google.com/spreadsheets/d/e/2PACX-1vSlPoHyTmr196f-UAnsxHPRqRhlnpJWYg5FNymdESZPKoTW9kiiol37jiW0-AugFU2qdXrfeuzbMuZk/pubhtml  (pelkkä lukuoikeus)
 - Sprint backlog ja burndown: Samassa tiedostossa backlogin kanssa
-- [CI (GitHub Actions)](LINKKI_ACTIONS-VÄLILEHDELLE)
-- GitHub Actions / CI: TODO
+- [CI (GitHub Actions)](https://github.com/Xxw6/ryhma-5-miniprojekti/actions)
 - Hyväksymistestit: TODO
 - [Definition of Done](DOD.md)
 Definition of Done
@@ -40,7 +39,10 @@ Alustavasti homma on valmis, kun:
 - CI ja sovitut Pylint-tarkistukset menevät läpi.
 - Koodi on selkeää ja tarvittavat ohjeet on päivitetty.
 Testaus
-TODO: komennot testien, testikattavuuden ja Pylintin ajamiseen.
+    uv run pytest                               # testit
+    uv run coverage run --branch -m pytest      # testit ja kattavuuden mittaus
+    uv run coverage report                      # kattavuusraportti
+    uv run pylint .                             # koodityylin tarkistus
 
 ## Asennus ja käyttö
 
@@ -58,7 +60,7 @@ Käynnistä ohjelma:
 
 ## Toiminnot
 
-- `1`: lisää teos 
+- `1`: lisää teos
 - `2`: listaa tallennetut teokset.
 - `0`: lopeta ohjelma.
 
