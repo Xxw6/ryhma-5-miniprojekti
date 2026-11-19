@@ -6,7 +6,7 @@ Ryhmä: Teemu, Elli, Samu, Tuomas, Essi
 
 # Lähdeviitehallinta
 
-[![CI](https://github.com/Xxw6/ryhma-5-miniprojekti/actions/workflows/main.yml/badge.svg)](https://github.com/Xxw6/ryhma-5-miniprojekti/actions)
+[![CI](https://github.com/Xxw6/ryhma-5-miniprojekti/actions/workflows/main.yml/badge.svg)](https://github.com/Xxw6/ryhma-5-miniprojekti/actions) [![codecov](https://codecov.io/gh/Xxw6/ryhma-5-miniprojekti/graph/badge.svg)](https://codecov.io/gh/Xxw6/ryhma-5-miniprojekti)
 
 Sovellus LaTeX-lähdeviitteiden hallintaan. Sen avulla kandidaatintutkielman kirjoittaja voi tallentaa käyttämänsä lähteet yhteen paikkaan ja tuottaa niistä BibTeX-tiedoston, jonka voi liittää suoraan LaTeX-dokumenttiin tai Overleafiin.
 
