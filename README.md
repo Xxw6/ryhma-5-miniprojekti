@@ -2,7 +2,7 @@
 
 Miniprojekti
 Ohjelmistotuotanto-kurssin ryhmätyö, syksy 2026.
-Ryhmä: Teemu, Elli, Samu, Tuomas, Essi
+Ryhmä: Teemu, Elli, Samu, Tomas, Essi
 
 # Lähdeviitehallinta
 
