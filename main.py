@@ -4,6 +4,7 @@ import sqlite3
 
 from tietokanta import ViiteVarasto
 from palvelu import ViitePalvelu
+from bibtex import muodosta_bibtex
 
 
 class SyoteTulostus:
@@ -22,7 +23,9 @@ class Sovellus:
 
     def kaynnista(self):
         while True:
-            self.syote_tulostus.kirjoita("\n1 Lisää teos\n2 Listaa teokset\n0 Lopeta")
+            self.syote_tulostus.kirjoita(
+                "\n1 Lisää teos\n2 Listaa teokset\n3 Tallenna BibTeX-tiedostoksi\n0 Lopeta"
+            )
             valinta = self.syote_tulostus.lue("Valinta: ").strip()
             if valinta == "0":
                 return
@@ -30,8 +33,10 @@ class Sovellus:
                 self.lisaa_teos()
             elif valinta == "2":
                 self.listaa_teokset()
+            elif valinta == "3":
+                self.tallenna_bibtex()
             else:
-                self.syote_tulostus.kirjoita("Valitse 1, 2 tai 0.")
+                self.syote_tulostus.kirjoita("Valitse 1, 2, 3 tai 0.")
 
     def lisaa_teos(self):
         teos = {
@@ -56,6 +61,15 @@ class Sovellus:
                 f"({teos['vuosi']})."
             )
 
+    def tallenna_bibtex(self):
+        teokset = self.palvelu.listaa_teokset()
+        if not teokset:
+            self.syote_tulostus.kirjoita("Ei tallennettuja teoksia.")
+            return
+        nimi = self.syote_tulostus.lue("Tiedoston nimi (references.bib): ").strip()
+        polku = Path(nimi or "references.bib")
+        polku.write_text(muodosta_bibtex(teokset), encoding="utf-8")
+        self.syote_tulostus.kirjoita(f"BibTeX tallennettu: {polku.resolve()}")
 
 def paaohjelma():
     tietokantapolku = Path(__file__).resolve().parent / "references.db"
