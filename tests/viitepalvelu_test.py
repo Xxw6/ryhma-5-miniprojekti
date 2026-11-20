@@ -9,6 +9,9 @@ class ViiteVarastoStub:
     def lisaa_teos(self, teos):
         self.teokset.append(teos)
 
+    def lisaa_artikkeli(self, artikkeli):
+        self.teokset.append(artikkeli)
+
     def listaa_teokset(self):
         return self.teokset
 
@@ -62,3 +65,55 @@ class TestViitePalvelu(unittest.TestCase):
         self.palvelu.lisaa_teos(self.teos())
 
         self.assertEqual(len(self.palvelu.listaa_teokset()), 1)
+
+    
+    def artikkeli(self, **muutokset):
+        tiedot = {
+            "viiteavain": "Tervo22",
+            "tekijat": "Tervo Jari",
+            "otsikko": "Ukko",
+            "journal": "Tieteellinen julkaisu",
+            "vuosi": "2022",
+            "volume": "10",
+            "pages": "15-20",
+        }
+        tiedot.update(muutokset)
+        return tiedot
+
+    def test_kelvollinen_artikkeli_tallentuu_varastoon(self):
+        self.palvelu.lisaa_artikkeli(self.artikkeli())
+
+        self.assertEqual(len(self.varasto.teokset), 1)
+        self.assertEqual(
+            self.varasto.teokset[0]["journal"],
+            "Tieteellinen julkaisu"
+        )
+
+    def test_artikkelin_vuosi_muutetaan_kokonaisluvuksi(self):
+        self.palvelu.lisaa_artikkeli(self.artikkeli())
+
+        self.assertEqual(self.varasto.teokset[0]["vuosi"], 2022)
+
+    def test_artikkelin_pakollinen_kentta_aiheuttaa_virheen(self):
+        with self.assertRaises(ValueError):
+            self.palvelu.lisaa_artikkeli(self.artikkeli(journal=""))
+
+    def test_artikkelin_vapaaehtoiset_kentat_voivat_olla_tyhjia(self):
+        self.palvelu.lisaa_artikkeli(
+            self.artikkeli(volume="", pages="")
+        )
+
+        self.assertEqual(self.varasto.teokset[0]["volume"], "")
+        self.assertEqual(self.varasto.teokset[0]["pages"], "")
+
+    def test_artikkelin_virheellinen_vuosi_aiheuttaa_virheen(self):
+        with self.assertRaises(ValueError):
+            self.palvelu.lisaa_artikkeli(
+                self.artikkeli(vuosi="virhe")
+            )
+
+    def test_artikkelin_vuosi_alueen_ulkopuolella_aiheuttaa_virheen(self):
+        with self.assertRaises(ValueError):
+            self.palvelu.lisaa_artikkeli(
+                self.artikkeli(vuosi="10000")
+            )
