@@ -2,7 +2,7 @@
 
 Miniprojekti
 Ohjelmistotuotanto-kurssin ryhmätyö, syksy 2026.
-Ryhmä: Teemu, Elli, Samu, Tomas, Essi
+Ryhmä: Teemu, Elli, Samu, Tomas, Essi, Kasper
 
 # Lähdeviitehallinta
 
@@ -60,8 +60,10 @@ Käynnistä ohjelma:
 
 ## Toiminnot
 
-- `1`: lisää teos
-- `2`: listaa tallennetut teokset.
+- `1`: lisää kirjaviite
+- `2`: lisää artikkeliviite
+- `3`: listaa tallennetut viitteet
+- `4`: tallenna BibTeX-tiedostoksi
 - `0`: lopeta ohjelma.
 
 ## Tietokanta

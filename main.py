@@ -24,19 +24,29 @@ class Sovellus:
     def kaynnista(self):
         while True:
             self.syote_tulostus.kirjoita(
-                "\n1 Lisää teos\n2 Listaa teokset\n3 Tallenna BibTeX-tiedostoksi\n0 Lopeta"
+                "\n1 Lisää kirjaviite"
+                "\n2 Lisää artikkeliviite"
+                "\n3 Listaa teokset"
+                "\n4 Tallenna BibTeX-tiedostoksi"
+                "\n0 Lopeta"
             )
             valinta = self.syote_tulostus.lue("Valinta: ").strip()
+
             if valinta == "0":
                 return
             if valinta == "1":
                 self.lisaa_teos()
             elif valinta == "2":
-                self.listaa_teokset()
+                self.lisaa_artikkeli()
             elif valinta == "3":
+                self.listaa_teokset()
+            elif valinta == "4":
                 self.tallenna_bibtex()
             else:
-                self.syote_tulostus.kirjoita("Valitse 1, 2, 3 tai 0.")
+                self.syote_tulostus.kirjoita(
+                    "Valitse 1, 2, 3, 4 tai 0."
+                )
+
 
     def lisaa_teos(self):
         teos = {
@@ -51,15 +61,50 @@ class Sovellus:
         except ValueError as virhe:
             self.syote_tulostus.kirjoita(str(virhe))
 
+    def lisaa_artikkeli(self):
+        artikkeli = {
+            "viiteavain": self.syote_tulostus.lue(
+                "Viiteavain (esim. tekija + vuosi): "
+            ),
+            "tekijat": self.syote_tulostus.lue("Tekijat: "),
+            "otsikko": self.syote_tulostus.lue("Artikkelin otsikko: "),
+            "journal": self.syote_tulostus.lue("Julkaisun nimi (journal): "),
+            "vuosi": self.syote_tulostus.lue("Julkaisuvuosi: "),
+            "volume": self.syote_tulostus.lue(
+                "Vuosikerta (volume, vapaaehtoinen): "
+            ),
+            "pages": self.syote_tulostus.lue(
+                "Sivut (pages, vapaaehtoinen): "
+            ),
+        }
+        try:
+            self.palvelu.lisaa_artikkeli(artikkeli)
+            self.syote_tulostus.kirjoita(
+                "Artikkeliviite tallennettu."
+            )
+        except ValueError as virhe:
+            self.syote_tulostus.kirjoita(str(virhe))
+
     def listaa_teokset(self):
         teokset = self.palvelu.listaa_teokset()
+
         if not teokset:
             self.syote_tulostus.kirjoita("Ei tallennettuja teoksia.")
+            return
+
         for teos in teokset:
-            self.syote_tulostus.kirjoita(
-                f"[{teos['viiteavain']}] {teos['tekijat']}: {teos['otsikko']} "
-                f"({teos['vuosi']})."
-            )
+            if teos["tyyppi"] == "article":
+                self.syote_tulostus.kirjoita(
+                    f"[{teos['viiteavain']}] {teos['tekijat']}: "
+                    f"{teos['otsikko']} ({teos['vuosi']}). "
+                    f"{teos['journal']}"
+                )
+            else:
+                self.syote_tulostus.kirjoita(
+                    f"[{teos['viiteavain']}] {teos['tekijat']}: "
+                    f"{teos['otsikko']} ({teos['vuosi']})."
+                )
+
 
     def tallenna_bibtex(self):
         teokset = self.palvelu.listaa_teokset()
