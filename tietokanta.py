@@ -27,7 +27,7 @@ class ViiteVarasto:
                 self.yhteys.execute("""
                     INSERT INTO "references"
                         (citekey, entry_type, author, title, year, publisher)
-                    VALUES (:viiteavain, 'book', :tekijat, :otsikko, :vuosi, '')
+                    VALUES (:viiteavain, 'book', :tekijat, :otsikko, :vuosi, :kustantaja)
                 """, teos)
         except sqlite3.IntegrityError as virhe:
             raise ValueError("Viiteavain on jo käytössä.") from virhe

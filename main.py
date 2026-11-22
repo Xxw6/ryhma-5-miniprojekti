@@ -54,6 +54,7 @@ class Sovellus:
             "tekijat": self.syote_tulostus.lue("Tekijat: "),
             "otsikko": self.syote_tulostus.lue("Teoksen nimi: "),
             "vuosi": self.syote_tulostus.lue("Julkaisuvuosi: "),
+            "kustantaja": self.syote_tulostus.lue("Kustantaja (vapaaehtoinen): "),
         }
         try:
             self.palvelu.lisaa_teos(teos)

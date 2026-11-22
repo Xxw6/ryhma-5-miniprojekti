@@ -66,7 +66,7 @@ class TestViitePalvelu(unittest.TestCase):
 
         self.assertEqual(len(self.palvelu.listaa_teokset()), 1)
 
-    
+
     def artikkeli(self, **muutokset):
         tiedot = {
             "viiteavain": "Tervo22",
@@ -117,3 +117,13 @@ class TestViitePalvelu(unittest.TestCase):
             self.palvelu.lisaa_artikkeli(
                 self.artikkeli(vuosi="10000")
             )
+
+    def test_kustantaja_tallentuu(self):
+        self.palvelu.lisaa_teos(self.teos(kustantaja="Otava"))
+
+        self.assertEqual(self.varasto.teokset[0]["kustantaja"], "Otava")
+
+    def test_kustantaja_on_vapaaehtoinen(self):
+        self.palvelu.lisaa_teos(self.teos())
+
+        self.assertEqual(self.varasto.teokset[0]["kustantaja"], "")
