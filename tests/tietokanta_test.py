@@ -11,11 +11,11 @@ class TestViiteVarasto(unittest.TestCase):
         self.yhteys.execute("""
             CREATE TABLE "references" (
                 id INTEGER PRIMARY KEY,
-                citekey TEXT,
-                entry_type TEXT,
-                author TEXT,
-                title TEXT,
-                year INTEGER,
+                citekey TEXT NOT NULL UNIQUE,
+                entry_type TEXT NOT NULL,
+                author TEXT NOT NULL,
+                title TEXT NOT NULL,
+                year INTEGER NOT NULL,
                 publisher TEXT,
                 journal TEXT,
                 volume TEXT,
@@ -79,3 +79,50 @@ class TestViiteVarasto(unittest.TestCase):
         tulos = self.varasto.listaa_artikkelit()
 
         self.assertEqual(len(tulos), 2)
+
+    def test_lisaa_teos_tallentaa_teoksen(self):
+        teos = {
+            "viiteavain": "kirja2",
+            "tekijat": "Matti Meikäläinen",
+            "otsikko": "Uusi teos",
+            "vuosi": 2018
+        }
+
+        self.varasto.lisaa_teos(teos)
+
+        tulos = self.varasto.listaa_teokset()
+
+        self.assertEqual(len(tulos), 3)
+        self.assertEqual(tulos[-1]["viiteavain"], "kirja2")
+
+    def test_lisaa_artikkeli_tallentaa_artikkelin(self):
+        artikkeli = {
+            "viiteavain": "artikkeli2",
+            "tekijat": "Matti Meikäläinen",
+            "otsikko": "Uusi artikkeli",
+            "vuosi": 2024,
+            "journal": "Testilehti",
+            "volume": "1",
+            "pages": "1-10"
+        }
+
+        self.varasto.lisaa_artikkeli(artikkeli)
+
+        tulos = self.varasto.listaa_artikkelit()
+
+        self.assertEqual(len(tulos), 2)
+        self.assertEqual(tulos[-1]["viiteavain"], "artikkeli2")
+
+    def test_lisaa_teos_virhe_kun_viiteavain_on_olemassa(self):
+        teos = {
+            "viiteavain": "kirja1",
+            "tekijat": "Joku",
+            "otsikko": "Testi",
+            "vuosi": 2024
+        }
+
+        with self.assertRaises(ValueError):
+            self.varasto.lisaa_teos(teos)
+
+if __name__ == "__main__":
+    unittest.main()
