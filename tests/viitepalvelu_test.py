@@ -127,3 +127,19 @@ class TestViitePalvelu(unittest.TestCase):
         self.palvelu.lisaa_teos(self.teos())
 
         self.assertEqual(self.varasto.teokset[0]["kustantaja"], "")
+
+    def test_viiteavain_muodostetaan_automaattisesti(self):
+        teos = self.teos(tekijat="Tervo, Jari", vuosi="2022")
+        del teos["viiteavain"]
+
+        viiteavain = self.palvelu.lisaa_teos(teos)
+
+        self.assertEqual(viiteavain, "Tervo2022")
+        self.assertEqual(self.varasto.teokset[0]["viiteavain"], "Tervo2022")
+
+    def test_erikoismerkki_tekijassa_aiheuttaa_virheen(self):
+        teos = self.teos(tekijat="Smith-Jones, Ann")
+        del teos["viiteavain"]
+
+        with self.assertRaises(ValueError):
+            self.palvelu.lisaa_teos(teos)
