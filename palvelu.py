@@ -1,11 +1,17 @@
+from viite import Viite
+
+
 class ViitePalvelu:
     def __init__(self, varasto):
         self.varasto = varasto
 
     def lisaa_teos(self, teos):
         teos = {avain: arvo.strip() for avain, arvo in teos.items()}
-        if not all(teos.values()):
-            raise ValueError("Täytä kaikki kentät.")
+        teos.setdefault("kustantaja", "")
+
+        pakolliset = ("tekijat", "otsikko", "vuosi")
+        if not all(teos.get(avain) for avain in pakolliset):
+            raise ValueError("Täytä kaikki pakolliset kentät.")
         try:
             vuosi = int(teos["vuosi"])
         except ValueError as virhe:
@@ -13,7 +19,14 @@ class ViitePalvelu:
         if not 1 <= vuosi <= 9999:
             raise ValueError("Vuoden pitää olla kokonaisluku 1–9999.")
         teos["vuosi"] = vuosi
+
+        if not teos.get("viiteavain"):
+            teos["viiteavain"] = Viite(
+                teos["tekijat"], teos["otsikko"], vuosi, teos["kustantaja"]
+            ).viiteavain
+
         self.varasto.lisaa_teos(teos)
+        return teos["viiteavain"]
 
     def lisaa_artikkeli(self, artikkeli):
         artikkeli = {

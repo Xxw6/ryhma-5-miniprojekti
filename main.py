@@ -50,14 +50,15 @@ class Sovellus:
 
     def lisaa_teos(self):
         teos = {
-            "viiteavain": self.syote_tulostus.lue("Viiteavain (esim. tekija + vuosi ): "),
             "tekijat": self.syote_tulostus.lue("Tekijat: "),
             "otsikko": self.syote_tulostus.lue("Teoksen nimi: "),
             "vuosi": self.syote_tulostus.lue("Julkaisuvuosi: "),
+            "kustantaja": self.syote_tulostus.lue("Kustantaja (vapaaehtoinen): "),
         }
         try:
-            self.palvelu.lisaa_teos(teos)
-            self.syote_tulostus.kirjoita("Teos tallennettu.")
+            viiteavain = self.palvelu.lisaa_teos(teos)
+            self.syote_tulostus.kirjoita(f"Teos tallennettu viiteavaimella {viiteavain}."
+            )
         except ValueError as virhe:
             self.syote_tulostus.kirjoita(str(virhe))
 
