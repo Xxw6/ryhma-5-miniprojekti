@@ -136,10 +136,28 @@ class TestViitePalvelu(unittest.TestCase):
 
         self.assertEqual(viiteavain, "Tervo2022")
         self.assertEqual(self.varasto.teokset[0]["viiteavain"], "Tervo2022")
+        
+    def test_yhdysmerkki_sukunimessa_hyvaksytaan(self):
+      teos = self.teos(tekijat="Smith-Jones, Ann")
+      del teos["viiteavain"]
 
-    def test_erikoismerkki_tekijassa_aiheuttaa_virheen(self):
-        teos = self.teos(tekijat="Smith-Jones, Ann")
-        del teos["viiteavain"]
+      viiteavain = self.palvelu.lisaa_teos(teos)
 
-        with self.assertRaises(ValueError):
-            self.palvelu.lisaa_teos(teos)
+      self.assertEqual(viiteavain, "SmithJones2022")
+
+    def test_samat_viiteavaimet_muodostuvat_yksilollisiksi(self):
+        eka = self.teos()
+        toka = self.teos()
+        kolmas = self.teos()
+
+        del eka["viiteavain"]
+        del toka["viiteavain"]
+        del kolmas["viiteavain"]
+
+        eka_avain = self.palvelu.lisaa_teos(eka)
+        toka_avain = self.palvelu.lisaa_teos(toka)
+        kolmas_avain = self.palvelu.lisaa_teos(kolmas)
+
+        self.assertEqual(eka_avain, "Jari2022")
+        self.assertEqual(toka_avain, "Jari2022a")
+        self.assertEqual(kolmas_avain, "Jari2022b")
