@@ -66,7 +66,7 @@ class TestViitePalvelu(unittest.TestCase):
 
         self.assertEqual(len(self.palvelu.listaa_teokset()), 1)
 
-    
+
     def artikkeli(self, **muutokset):
         tiedot = {
             "viiteavain": "Tervo22",
@@ -117,3 +117,47 @@ class TestViitePalvelu(unittest.TestCase):
             self.palvelu.lisaa_artikkeli(
                 self.artikkeli(vuosi="10000")
             )
+
+    def test_kustantaja_tallentuu(self):
+        self.palvelu.lisaa_teos(self.teos(kustantaja="Otava"))
+
+        self.assertEqual(self.varasto.teokset[0]["kustantaja"], "Otava")
+
+    def test_kustantaja_on_vapaaehtoinen(self):
+        self.palvelu.lisaa_teos(self.teos())
+
+        self.assertEqual(self.varasto.teokset[0]["kustantaja"], "")
+
+    def test_viiteavain_muodostetaan_automaattisesti(self):
+        teos = self.teos(tekijat="Tervo, Jari", vuosi="2022")
+        del teos["viiteavain"]
+
+        viiteavain = self.palvelu.lisaa_teos(teos)
+
+        self.assertEqual(viiteavain, "Tervo2022")
+        self.assertEqual(self.varasto.teokset[0]["viiteavain"], "Tervo2022")
+        
+    def test_yhdysmerkki_sukunimessa_hyvaksytaan(self):
+      teos = self.teos(tekijat="Smith-Jones, Ann")
+      del teos["viiteavain"]
+
+      viiteavain = self.palvelu.lisaa_teos(teos)
+
+      self.assertEqual(viiteavain, "SmithJones2022")
+
+    def test_samat_viiteavaimet_muodostuvat_yksilollisiksi(self):
+        eka = self.teos()
+        toka = self.teos()
+        kolmas = self.teos()
+
+        del eka["viiteavain"]
+        del toka["viiteavain"]
+        del kolmas["viiteavain"]
+
+        eka_avain = self.palvelu.lisaa_teos(eka)
+        toka_avain = self.palvelu.lisaa_teos(toka)
+        kolmas_avain = self.palvelu.lisaa_teos(kolmas)
+
+        self.assertEqual(eka_avain, "Jari2022")
+        self.assertEqual(toka_avain, "Jari2022a")
+        self.assertEqual(kolmas_avain, "Jari2022b")
