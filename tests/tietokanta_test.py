@@ -85,7 +85,8 @@ class TestViiteVarasto(unittest.TestCase):
             "viiteavain": "kirja2",
             "tekijat": "Matti Meikäläinen",
             "otsikko": "Uusi teos",
-            "vuosi": 2018
+            "vuosi": 2018,
+            "kustantaja": ""
         }
 
         self.varasto.lisaa_teos(teos)
@@ -118,7 +119,8 @@ class TestViiteVarasto(unittest.TestCase):
             "viiteavain": "kirja1",
             "tekijat": "Joku",
             "otsikko": "Testi",
-            "vuosi": 2024
+            "vuosi": 2024,
+            "kustantaja": ""
         }
 
         with self.assertRaises(ValueError):
@@ -155,4 +157,4 @@ class TestViiteVarastoKirjat(unittest.TestCase):
             self.varasto.lisaa_teos(self.kirja(otsikko="Toinen kirja"))
             
     if __name__ == "__main__":
-    unittest.main()
+         unittest.main()
