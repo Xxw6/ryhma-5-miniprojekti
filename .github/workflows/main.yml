@@ -22,6 +22,8 @@ jobs:
         run: uv run pylint .
       - name: Run tests
         run: uv run coverage run --branch -m pytest
+      - name: Robot tests
+        run: uv run robot --pythonpath . tests/robot
       - name: Coverage report
         run: uv run coverage report
       - name: Coverage XML
