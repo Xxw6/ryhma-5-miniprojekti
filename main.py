@@ -28,6 +28,7 @@ class Sovellus:
                 "\n2 Lisää artikkeliviite"
                 "\n3 Listaa teokset"
                 "\n4 Tallenna BibTeX-tiedostoksi"
+                "\n5 Poista viite"
                 "\n0 Lopeta"
             )
             valinta = self.syote_tulostus.lue("Valinta: ").strip()
@@ -42,9 +43,11 @@ class Sovellus:
                 self.listaa_teokset()
             elif valinta == "4":
                 self.tallenna_bibtex()
+            elif valinta == "5":
+                self.poista_viite()
             else:
                 self.syote_tulostus.kirjoita(
-                    "Valitse 1, 2, 3, 4 tai 0."
+                    "Valitse 1, 2, 3, 4, 5 tai 0."
                 )
 
 
@@ -116,6 +119,14 @@ class Sovellus:
         polku = Path(nimi or "references.bib")
         polku.write_text(muodosta_bibtex(teokset), encoding="utf-8")
         self.syote_tulostus.kirjoita(f"BibTeX tallennettu: {polku.resolve()}")
+    
+    def poista_viite(self):
+        viiteavain = self.syote_tulostus.lue("Poistettavan viitteen viiteavain: ")
+        try:
+            self.palvelu.poista_viite(viiteavain)
+            self.syote_tulostus.kirjoita(f"Viite {viiteavain.strip()} poistettu.")
+        except ValueError as virhe:
+            self.syote_tulostus.kirjoita(str(virhe))
 
 def paaohjelma():
     tietokantapolku = Path(__file__).resolve().parent / "references.db"

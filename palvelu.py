@@ -87,6 +87,12 @@ class ViitePalvelu:
 
         self.varasto.lisaa_artikkeli(artikkeli)
 
+    def poista_viite(self, viiteavain):
+        viiteavain = viiteavain.strip()
+        if not viiteavain:
+            raise ValueError("Anna poistettavan viitteen viiteavain.")
+        if not self.varasto.poista_viite(viiteavain):
+            raise ValueError(f"Viiteavainta {viiteavain} ei löytynyt.")
 
     def listaa_teokset(self):
         return self.varasto.listaa_teokset()

@@ -47,6 +47,12 @@ class ViiteVarasto:
         except sqlite3.IntegrityError as virhe:
             raise ValueError("Viiteavain on jo käytössä.") from virhe
 
+    def poista_viite(self, viiteavain):
+        with self.yhteys:
+            kursori = self.yhteys.execute(
+                'DELETE FROM "references" WHERE citekey = ?', (viiteavain,)
+            )
+        return kursori.rowcount > 0
 
     def listaa_teokset(self):
         rivit = self.yhteys.execute("""
