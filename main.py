@@ -119,7 +119,7 @@ class Sovellus:
         polku = Path(nimi or "references.bib")
         polku.write_text(muodosta_bibtex(teokset), encoding="utf-8")
         self.syote_tulostus.kirjoita(f"BibTeX tallennettu: {polku.resolve()}")
-    
+
     def poista_viite(self):
         viiteavain = self.syote_tulostus.lue("Poistettavan viitteen viiteavain: ")
         try:
