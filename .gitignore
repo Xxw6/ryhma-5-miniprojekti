@@ -7,3 +7,6 @@ __pycache__/
 htmlcov/
 coverage.xml
 references.bib
+output.xml
+log.html
+report.html
