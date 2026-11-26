@@ -9,3 +9,9 @@ Lisaa Kirja
     Syota  ${otsikko}
     Syota  ${vuosi}
     Syota  ${kustantaja}
+
+
+Poista Viite
+    [Arguments]  ${viiteavain}
+    Syota  5
+    Syota  ${viiteavain}
