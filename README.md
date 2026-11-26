@@ -35,6 +35,7 @@ Ohjelma luo tietokannan `references.db` automaattisesti ensimmäisellä käynnis
 - `2` lisää artikkeliviite
 - `3` listaa tallennetut viitteet
 - `4` tallenna BibTeX-tiedostoksi
+- `5` poista viite viiteavaimen perusteella
 - `0` lopeta
 
 ## Testaus
