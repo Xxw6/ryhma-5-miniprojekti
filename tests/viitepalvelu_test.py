@@ -161,3 +161,84 @@ class TestViitePalvelu(unittest.TestCase):
         self.assertEqual(eka_avain, "Jari2022")
         self.assertEqual(toka_avain, "Jari2022a")
         self.assertEqual(kolmas_avain, "Jari2022b")
+
+    def test_manuaalinen_viiteavain_tallennetaan(self):
+        viiteavain = self.palvelu.lisaa_teos(
+            self.teos(viiteavain="OmaAvain2022")
+        )
+
+        self.assertEqual(viiteavain, "OmaAvain2022")
+        self.assertEqual(
+            self.varasto.teokset[0]["viiteavain"],
+            "OmaAvain2022"
+        )
+
+    def test_tyhjalla_viiteavaimella_muodostetaan_automaattinen(self):
+        viiteavain = self.palvelu.lisaa_teos(
+            self.teos(viiteavain="")
+        )
+
+        self.assertEqual(viiteavain, "Jari2022")
+
+    def test_manuaalinen_viiteavain_saa_olla_artikkelilla(self):
+        viiteavain = self.palvelu.lisaa_artikkeli(
+            self.artikkeli(viiteavain="Artikkeli2022")
+        )
+
+        self.assertEqual(viiteavain, "Artikkeli2022")
+
+    def test_artikkelin_tyhjalla_viiteavaimella_muodostetaan_automaattinen(self):
+        viiteavain = self.palvelu.lisaa_artikkeli(
+            self.artikkeli(viiteavain="")
+        )
+
+        self.assertEqual(viiteavain, "Jari2022")
+
+    def test_manuaalinen_kaksoiskappale_hylataan(self):
+        self.palvelu.lisaa_teos(
+            self.teos(viiteavain="OmaAvain")
+        )
+
+        with self.assertRaisesRegex(ValueError, "jo käytössä"):
+            self.palvelu.lisaa_artikkeli(
+                self.artikkeli(viiteavain="OmaAvain")
+            )
+
+        self.assertEqual(len(self.varasto.teokset), 1)
+
+    def test_manuaalinen_viiteavain_jossa_erikoismerkki_hylataan(self):
+        with self.assertRaisesRegex(ValueError, "erikoismerkkejä"):
+            self.palvelu.lisaa_teos(
+                self.teos(viiteavain="Oma_Avain")
+            )
+
+        self.assertEqual(self.varasto.teokset, [])
+
+    def test_automaattinen_avain_ei_ohita_manuaalisesti_varattua(self):
+        self.palvelu.lisaa_teos(
+            self.teos(viiteavain="Jari2022")
+        )
+
+        viiteavain = self.palvelu.lisaa_teos(
+            self.teos(viiteavain="")
+        )
+
+        self.assertEqual(viiteavain, "Jari2022a")
+
+    def test_automaattinen_viiteavain_toimii_yli_26_suffiksilla(self):
+        perusavain = "Jari2022"
+
+        self.varasto.teokset.extend(
+            {"viiteavain": perusavain + liite}
+            for liite in (
+                [""] +
+                [chr(kirjain) for kirjain in range(ord("a"), ord("z") + 1)] +
+                ["aa"]
+            )
+        )
+
+        viiteavain = self.palvelu.lisaa_teos(
+            self.teos(viiteavain="")
+        )
+
+        self.assertEqual(viiteavain, "Jari2022ab")

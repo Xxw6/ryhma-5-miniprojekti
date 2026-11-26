@@ -5,17 +5,17 @@ class ViitePalvelu:
     def __init__(self, varasto):
         self.varasto = varasto
 
+    def _validoi_tiedot(self, tiedot, pakolliset):
+        tiedot = {
+            avain: arvo.strip()
+            for avain, arvo in tiedot.items()
+        }
 
-    def lisaa_teos(self, teos):
-        teos = {avain: arvo.strip() for avain, arvo in teos.items()}
-        teos.setdefault("kustantaja", "")
-
-        pakolliset = ("tekijat", "otsikko", "vuosi")
-        if not all(teos.get(avain) for avain in pakolliset):
+        if not all(tiedot.get(avain) for avain in pakolliset):
             raise ValueError("Täytä kaikki pakolliset kentät.")
 
         try:
-            vuosi = int(teos["vuosi"])
+            vuosi = int(tiedot["vuosi"])
         except ValueError as virhe:
             raise ValueError(
                 "Vuoden pitää olla kokonaisluku 1–9999."
@@ -24,68 +24,82 @@ class ViitePalvelu:
         if not 1 <= vuosi <= 9999:
             raise ValueError("Vuoden pitää olla kokonaisluku 1–9999.")
 
-        teos["vuosi"] = vuosi
+        tiedot["vuosi"] = vuosi
+        return tiedot
 
-        viite = Viite(
-            teos["tekijat"],
-            teos["otsikko"],
-            vuosi,
-            teos["kustantaja"]
-        )
+    def _muodosta_viiteavain(self, viite):
+        olemassa_olevat = {
+            teos["viiteavain"]
+            for teos in self.varasto.listaa_teokset()
+        }
 
         perusavain = viite.viiteavain
-        viiteavain = perusavain
-        kirjain = ord("a")
+        suffiksi = 0
 
-        olemassa_olevat = {
-            t["viiteavain"] for t in self.varasto.listaa_teokset()
-        }
+        while True:
+            liite = ""
+            numero = suffiksi
 
-        while viiteavain in olemassa_olevat:
-            viiteavain = f"{perusavain}{chr(kirjain)}"
-            kirjain += 1
+            while numero > 0:
+                numero, jaannos = divmod(numero - 1, 26)
+                liite = chr(ord("a") + jaannos) + liite
 
-        teos["viiteavain"] = viiteavain
+            viiteavain = f"{perusavain}{liite}"
 
-        self.varasto.lisaa_teos(teos)
-        return viiteavain
+            if viiteavain not in olemassa_olevat:
+                return viiteavain
 
+            suffiksi += 1
 
-    def lisaa_artikkeli(self, artikkeli):
-        artikkeli = {
-            avain: arvo.strip()
-            for avain, arvo in artikkeli.items()
-        }
-
-        pakolliset = (
-            "viiteavain",
-            "tekijat",
-            "otsikko",
-            "journal",
-            "vuosi",
+    def _tallenna_viite(self, tiedot, tyyppi):
+        viite = Viite(
+            tiedot["tekijat"],
+            tiedot["otsikko"],
+            tiedot["vuosi"],
+            tiedot.get("kustantaja", ""),
+            tiedot.get("viiteavain")
         )
 
-        if not all(artikkeli.get(avain) for avain in pakolliset):
-            raise ValueError("Täytä kaikki pakolliset kentät.")
+        if tiedot.get("viiteavain", "").strip():
+            viiteavain = viite.viiteavain
+            olemassa_olevat = {
+                teos["viiteavain"]
+                for teos in self.varasto.listaa_teokset()
+            }
 
-        try:
-            vuosi = int(artikkeli["vuosi"])
-        except ValueError as virhe:
-            raise ValueError(
-                "Vuoden pitää olla kokonaisluku 1–9999."
-            ) from virhe
+            if viiteavain in olemassa_olevat:
+                raise ValueError("Viiteavain on jo käytössä.")
+        else:
+            viiteavain = self._muodosta_viiteavain(viite)
 
-        if not 1 <= vuosi <= 9999:
-            raise ValueError(
-                "Vuoden pitää olla kokonaisluku 1–9999."
-            )
+        tiedot["viiteavain"] = viiteavain
+        if tyyppi == "book":
+            self.varasto.lisaa_teos(tiedot)
+        else:
+            self.varasto.lisaa_artikkeli(tiedot)
 
-        artikkeli["vuosi"] = vuosi
+        return viiteavain
 
+    def lisaa_teos(self, teos):
+        teos.setdefault("kustantaja", "")
+
+        teos = self._validoi_tiedot(
+            teos,
+            ("tekijat", "otsikko", "vuosi")
+        )
+
+        return self._tallenna_viite(teos, "book")
+
+    def lisaa_artikkeli(self, artikkeli):
         artikkeli.setdefault("volume", "")
         artikkeli.setdefault("pages", "")
 
-        self.varasto.lisaa_artikkeli(artikkeli)
+        artikkeli = self._validoi_tiedot(
+            artikkeli,
+            ("tekijat", "otsikko", "journal", "vuosi")
+        )
+
+        return self._tallenna_viite(artikkeli, "article")
 
     def poista_viite(self, viiteavain):
         viiteavain = viiteavain.strip()

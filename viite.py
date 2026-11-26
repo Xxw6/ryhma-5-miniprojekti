@@ -12,7 +12,7 @@ class Viite:
         self.vuosi = vuosi
         self.kustantaja = kustantaja
 
-        if viiteavain:
+        if viiteavain and viiteavain.strip():
             self.viiteavain = self.tarkista_viiteavain(viiteavain)
         else:
             self.viiteavain = self.muodosta_viiteavain()

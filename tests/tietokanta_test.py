@@ -155,6 +155,37 @@ class TestViiteVarastoKirjat(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.varasto.lisaa_teos(self.kirja(otsikko="Toinen kirja"))
+
+    def test_sama_viiteavain_ei_kelpaaa_eri_viitetyypeille(self):
+        self.varasto.lisaa_teos(self.kirja())
+
+        artikkeli = {
+            "viiteavain": "Tervo2022",
+            "tekijat": "Toinen Tekijä",
+            "otsikko": "Artikkeli",
+            "vuosi": 2022,
+            "journal": "Testilehti",
+            "volume": "",
+            "pages": ""
+        }
+
+        with self.assertRaisesRegex(ValueError, "jo käytössä"):
+            self.varasto.lisaa_artikkeli(artikkeli)
+
+        self.assertEqual(len(self.varasto.listaa_teokset()), 1)
+
+    def test_epaonnistunut_tallennus_sailyttaa_alkuperaisen_viitteen(self):
+        self.varasto.lisaa_teos(self.kirja())
+
+        with self.assertRaises(ValueError):
+            self.varasto.lisaa_teos(
+                self.kirja(otsikko="Toinen kirja")
+            )
+
+        teokset = self.varasto.listaa_teokset()
+
+        self.assertEqual(len(teokset), 1)
+        self.assertEqual(teokset[0]["otsikko"], "Ukko")
             
     if __name__ == "__main__":
          unittest.main()
