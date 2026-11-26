@@ -3,7 +3,7 @@ Resource  resource.robot
 
 *** Test Cases ***
 Viitteen Poisto Avaimella Onnistuu
-    Lisaa Kirja  Tervo, Jari  Ukko  2022  Otava
+    Lisaa Kirja  ${EMPTY}  Tervo, Jari  Ukko  2022  Otava
     Poista Viite  Tervo2022
     Syota  3
     Kaynnista Sovellus
@@ -11,8 +11,8 @@ Viitteen Poisto Avaimella Onnistuu
     Tulosteessa Pitaisi Olla  Ei tallennettuja teoksia.
 
 Poisto Poistaa Vain Annetun Viitteen
-    Lisaa Kirja  Tervo, Jari  Ukko  2022  Otava
-    Lisaa Kirja  Linna, Väinö  Tuntematon sotilas  1954  WSOY
+    Lisaa Kirja  ${EMPTY}  Tervo, Jari  Ukko  2022  Otava
+    Lisaa Kirja  ${EMPTY}  Linna, Väinö  Tuntematon sotilas  1954  WSOY
     Poista Viite  Tervo2022
     Syota  3
     Kaynnista Sovellus
