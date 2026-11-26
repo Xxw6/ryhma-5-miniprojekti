@@ -47,7 +47,7 @@ class TestValikonIO(unittest.TestCase):
         sovellus.kaynnista()
 
         self.assertEqual(io.kysymykset, ["Valinta: ", "Valinta: "])
-        self.assertIn("Valitse 1, 2, 3, 4, 5 tai 0.", io.tulosteet)
+        self.assertIn("Valitse 1, 2, 3, 4, 5, 6 tai 0.", io.tulosteet)
 
 class TestSyoteTulostus(unittest.TestCase):
     def test_lue_valittaa_kysymyksen_ja_palauttaa_kayttajan_syotteen(self):

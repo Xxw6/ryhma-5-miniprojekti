@@ -29,6 +29,7 @@ class Sovellus:
                 "\n3 Listaa teokset"
                 "\n4 Tallenna BibTeX-tiedostoksi"
                 "\n5 Poista viite"
+                "\n6 Hae viitteitä"
                 "\n0 Lopeta"
             )
             valinta = self.syote_tulostus.lue("Valinta: ").strip()
@@ -45,9 +46,11 @@ class Sovellus:
                 self.tallenna_bibtex()
             elif valinta == "5":
                 self.poista_viite()
+            elif valinta == "6":
+                self.hae_viitteet()
             else:
                 self.syote_tulostus.kirjoita(
-                    "Valitse 1, 2, 3, 4, 5 tai 0."
+                    "Valitse 1, 2, 3, 4, 5, 6 tai 0."
                 )
 
 
@@ -127,6 +130,49 @@ class Sovellus:
             self.syote_tulostus.kirjoita(f"Viite {viiteavain.strip()} poistettu.")
         except ValueError as virhe:
             self.syote_tulostus.kirjoita(str(virhe))
+
+    def hae_viitteet(self):
+        tekija = self.syote_tulostus.lue(
+            "Tekija (vapaaehtoinen): "
+        )
+        vuosi = self.syote_tulostus.lue(
+            "Julkaisuvuosi (vapaaehtoinen): "
+        )
+        julkaisu = self.syote_tulostus.lue(
+            "Julkaisija tai julkaisun nimi (vapaaehtoinen): "
+        )
+
+        try:
+            tulokset = self.palvelu.hae_viitteet(
+                tekija=tekija,
+                vuosi=vuosi,
+                julkaisu=julkaisu
+            )
+        except ValueError as virhe:
+            self.syote_tulostus.kirjoita(str(virhe))
+            return
+
+        if not tulokset:
+            self.syote_tulostus.kirjoita(
+                "Ei hakutuloksia."
+            )
+            return
+
+        for viite in tulokset:
+            if viite["tyyppi"] == "article":
+                self.syote_tulostus.kirjoita(
+                    f"[{viite['viiteavain']}] "
+                    f"{viite['tekijat']}: "
+                    f"{viite['otsikko']} ({viite['vuosi']}). "
+                    f"{viite['journal']}"
+                )
+            else:
+                self.syote_tulostus.kirjoita(
+                    f"[{viite['viiteavain']}] "
+                    f"{viite['tekijat']}: "
+                    f"{viite['otsikko']} ({viite['vuosi']}). "
+                    f"{viite.get('kustantaja', '')}"
+                )
 
 def paaohjelma():
     tietokantapolku = Path(__file__).resolve().parent / "references.db"
