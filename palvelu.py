@@ -99,3 +99,46 @@ class ViitePalvelu:
 
     def listaa_artikkelit(self):
         return self.varasto.listaa_artikkelit()
+
+    def hae_viitteet(self, tekija="", vuosi="", julkaisu=""):
+        tekija = str(tekija or "").strip().casefold()
+        vuosi = str(vuosi or "").strip()
+        julkaisu = str(julkaisu or "").strip().casefold()
+
+        if not any((tekija, vuosi, julkaisu)):
+            raise ValueError("Anna vähintään yksi hakuehto.")
+
+        if vuosi:
+            try:
+                vuosi = int(vuosi)
+            except ValueError as virhe:
+                raise ValueError(
+                    "Vuoden pitää olla kokonaisluku 1–9999."
+                ) from virhe
+
+            if not 1 <= vuosi <= 9999:
+                raise ValueError(
+                    "Vuoden pitää olla kokonaisluku 1–9999."
+                )
+
+        viitteet = self.varasto.listaa_teokset()
+        tulokset = []
+
+        for viite in viitteet:
+            if tekija and tekija not in viite["tekijat"].casefold():
+                continue
+
+            if vuosi and viite["vuosi"] != vuosi:
+                continue
+
+            julkaisutiedot = " ".join((
+                viite.get("kustantaja") or "",
+                viite.get("journal") or ""
+            )).casefold()
+
+            if julkaisu and julkaisu not in julkaisutiedot:
+                continue
+
+            tulokset.append(viite)
+
+        return tulokset

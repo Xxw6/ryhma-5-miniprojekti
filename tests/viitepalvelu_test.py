@@ -161,3 +161,88 @@ class TestViitePalvelu(unittest.TestCase):
         self.assertEqual(eka_avain, "Jari2022")
         self.assertEqual(toka_avain, "Jari2022a")
         self.assertEqual(kolmas_avain, "Jari2022b")
+
+    def test_haku_loytaa_tekijan_perusteella(self):
+        self.palvelu.lisaa_teos(
+            self.teos(tekijat="Tervo Jari")
+        )
+
+        tulokset = self.palvelu.hae_viitteet(tekija="tervo")
+
+        self.assertEqual(len(tulokset), 1)
+        self.assertEqual(tulokset[0]["tekijat"], "Tervo Jari")
+
+    def test_haku_loytaa_vuoden_perusteella(self):
+        self.palvelu.lisaa_teos(
+            self.teos(vuosi="2021")
+        )
+        self.palvelu.lisaa_teos(
+            self.teos(vuosi="2022", tekijat="Niemi Sari")
+        )
+
+        tulokset = self.palvelu.hae_viitteet(vuosi="2022")
+
+        self.assertEqual(len(tulokset), 1)
+        self.assertEqual(tulokset[0]["vuosi"], 2022)
+
+    def test_haku_loytaa_kustantajan_perusteella(self):
+        self.palvelu.lisaa_teos(
+            self.teos(kustantaja="Otava")
+        )
+
+        tulokset = self.palvelu.hae_viitteet(julkaisu="otava")
+
+        self.assertEqual(len(tulokset), 1)
+
+    def test_haku_loytaa_artikkelin_julkaisun_perusteella(self):
+        self.palvelu.lisaa_artikkeli(
+            self.artikkeli(journal="Tieteellinen julkaisu")
+        )
+
+        tulokset = self.palvelu.hae_viitteet(
+            julkaisu="tieteellinen"
+        )
+
+        self.assertEqual(len(tulokset), 1)
+
+    def test_haku_yhdistaa_useita_ehtoja(self):
+        self.palvelu.lisaa_teos(
+            self.teos(
+                tekijat="Tervo Jari",
+                vuosi="2022",
+                kustantaja="Otava"
+            )
+        )
+        self.palvelu.lisaa_teos(
+            self.teos(
+                tekijat="Tervo Jari",
+                vuosi="2021",
+                kustantaja="Otava"
+            )
+        )
+
+        tulokset = self.palvelu.hae_viitteet(
+            tekija="Tervo",
+            vuosi="2022",
+            julkaisu="Otava"
+        )
+
+        self.assertEqual(len(tulokset), 1)
+        self.assertEqual(tulokset[0]["vuosi"], 2022)
+
+    def test_haku_ilman_tuloksia_palauttaa_tyhjan_listan(self):
+        self.palvelu.lisaa_teos(self.teos())
+
+        tulokset = self.palvelu.hae_viitteet(
+            tekija="Loytymattoman"
+        )
+
+        self.assertEqual(tulokset, [])
+
+    def test_haku_ilman_ehtoja_aiheuttaa_virheen(self):
+        with self.assertRaises(ValueError):
+            self.palvelu.hae_viitteet()
+
+    def test_haku_virheellisella_vuodella_aiheuttaa_virheen(self):
+        with self.assertRaises(ValueError):
+            self.palvelu.hae_viitteet(vuosi="kaksituhatta")
