@@ -25,3 +25,8 @@ class AppLibrary:
             raise AssertionError(
                 f"Tulosteessa ei ole riviä {teksti!r}. Tulosteet: {self._io.tulosteet}"
             )
+    def tulosteessa_ei_pitaisi_olla(self, teksti):
+        if teksti in self._io.tulosteet:
+            raise AssertionError(
+                f"Tulosteessa ei pitäisi olla riviä {teksti!r}. Tulosteet: {self._io.tulosteet}"
+            )
